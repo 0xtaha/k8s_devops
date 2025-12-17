@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: car-fleet-config
+  namespace: car-fleet
+  labels:
+    app: car-fleet-api
+data:
+  # Application configuration
+  AGENCY_NAME: "Orange Car Rental"
+  FLASK_ENV: "production"
+  LOG_LEVEL: "INFO"
+
+  # API configuration
+  API_VERSION: "1.0"
+  CORS_ENABLED: "true"
+
+  # Initial sample cars (JSON format)
+  SAMPLE_CARS: |
+    [
+      {"brand": "Renault", "model": "Clio", "year": 2022, "registration": "AB-123-CD"},
+      {"brand": "Peugeot", "model": "208", "year": 2023, "registration": "EF-456-GH"},
+      {"brand": "Citroën", "model": "C3", "year": 2021, "registration": "IJ-789-KL"},
+      {"brand": "Renault", "model": "Megane", "year": 2023, "registration": "MN-012-OP"}
+    ]

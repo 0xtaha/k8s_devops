@@ -1,0 +1,414 @@
+openapi: 3.0.3
+info:
+  title: Car Fleet Management API
+  description: |
+    A RESTful API for managing a car rental fleet. This API allows you to:
+    - View all cars in the fleet
+    - Check available cars for rent
+    - Add new cars to the fleet
+    - Rent and return cars
+    - Delete cars from the fleet
+    - View fleet statistics
+  version: 1.0.0
+  contact:
+    name: Orange Car Rental
+    email: support@orangecarrental.com
+
+servers:
+  - url: http://localhost:5000
+    description: Development server
+  - url: http://127.0.0.1:5000
+    description: Local server
+
+tags:
+  - name: Cars
+    description: Car fleet management operations
+  - name: Statistics
+    description: Fleet statistics and reporting
+  - name: Information
+    description: API information
+
+paths:
+  /:
+    get:
+      tags:
+        - Information
+      summary: API Information
+      description: Get information about the API and available endpoints
+      operationId: getHome
+      responses:
+        '200':
+          description: API information retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Car Fleet Management API
+                  version:
+                    type: string
+                    example: "1.0"
+                  agency:
+                    type: string
+                    example: Orange Car Rental
+                  endpoints:
+                    type: object
+                    additionalProperties:
+                      type: string
+
+  /api/cars:
+    get:
+      tags:
+        - Cars
+      summary: Get all cars
+      description: Retrieve all cars in the fleet regardless of availability status
+      operationId: getAllCars
+      responses:
+        '200':
+          description: Cars retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  count:
+                    type: integer
+                    example: 5
+                  cars:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Car'
+
+    post:
+      tags:
+        - Cars
+      summary: Add a new car
+      description: Add a new car to the fleet
+      operationId: addCar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewCar'
+      responses:
+        '201':
+          description: Car added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Car Toyota Corolla (ABC123) added successfully
+                  car:
+                    $ref: '#/components/schemas/Car'
+        '400':
+          description: Invalid input or car already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/cars/available:
+    get:
+      tags:
+        - Cars
+      summary: Get available cars
+      description: Retrieve all cars that are currently available for rent
+      operationId: getAvailableCars
+      responses:
+        '200':
+          description: Available cars retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  count:
+                    type: integer
+                    example: 3
+                  cars:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Car'
+
+  /api/cars/{registration}:
+    get:
+      tags:
+        - Cars
+      summary: Get car by registration
+      description: Retrieve details of a specific car by its registration number
+      operationId: getCar
+      parameters:
+        - $ref: '#/components/parameters/RegistrationParam'
+      responses:
+        '200':
+          description: Car found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  car:
+                    $ref: '#/components/schemas/Car'
+        '404':
+          description: Car not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Cars
+      summary: Delete a car
+      description: Remove a car from the fleet by its registration number
+      operationId: deleteCar
+      parameters:
+        - $ref: '#/components/parameters/RegistrationParam'
+      responses:
+        '200':
+          description: Car deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Car ABC123 deleted successfully
+                  car:
+                    $ref: '#/components/schemas/Car'
+        '404':
+          description: Car not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/cars/{registration}/rent:
+    put:
+      tags:
+        - Cars
+      summary: Rent a car
+      description: Mark a car as rented
+      operationId: rentCar
+      parameters:
+        - $ref: '#/components/parameters/RegistrationParam'
+      responses:
+        '200':
+          description: Car rented successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Car Toyota Corolla (ABC123) rented successfully
+                  car:
+                    $ref: '#/components/schemas/Car'
+        '400':
+          description: Car is already rented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Car not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/cars/{registration}/return:
+    put:
+      tags:
+        - Cars
+      summary: Return a car
+      description: Mark a rented car as returned and available
+      operationId: returnCar
+      parameters:
+        - $ref: '#/components/parameters/RegistrationParam'
+      responses:
+        '200':
+          description: Car returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Car Toyota Corolla (ABC123) returned successfully
+                  car:
+                    $ref: '#/components/schemas/Car'
+        '400':
+          description: Car is not currently rented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Car not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/stats:
+    get:
+      tags:
+        - Statistics
+      summary: Get fleet statistics
+      description: Retrieve statistics about the car fleet
+      operationId: getStats
+      responses:
+        '200':
+          description: Statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  stats:
+                    $ref: '#/components/schemas/FleetStats'
+
+components:
+  parameters:
+    RegistrationParam:
+      name: registration
+      in: path
+      description: Car registration number
+      required: true
+      schema:
+        type: string
+        example: ABC123
+
+  schemas:
+    Car:
+      type: object
+      required:
+        - brand
+        - model
+        - year
+        - registration
+        - availability
+      properties:
+        brand:
+          type: string
+          description: Car brand/manufacturer
+          example: Toyota
+        model:
+          type: string
+          description: Car model name
+          example: Corolla
+        year:
+          type: integer
+          description: Manufacturing year
+          example: 2022
+          minimum: 1900
+          maximum: 2100
+        registration:
+          type: string
+          description: Unique registration number
+          example: ABC123
+        availability:
+          type: boolean
+          description: Whether the car is available for rent
+          example: true
+
+    NewCar:
+      type: object
+      required:
+        - brand
+        - model
+        - year
+        - registration
+      properties:
+        brand:
+          type: string
+          description: Car brand/manufacturer
+          example: Toyota
+          minLength: 1
+        model:
+          type: string
+          description: Car model name
+          example: Corolla
+          minLength: 1
+        year:
+          type: integer
+          description: Manufacturing year
+          example: 2022
+          minimum: 1900
+          maximum: 2100
+        registration:
+          type: string
+          description: Unique registration number
+          example: ABC123
+          minLength: 1
+
+    FleetStats:
+      type: object
+      properties:
+        total_cars:
+          type: integer
+          description: Total number of cars in the fleet
+          example: 10
+        available_cars:
+          type: integer
+          description: Number of cars available for rent
+          example: 6
+        rented_cars:
+          type: integer
+          description: Number of cars currently rented
+          example: 4
+        availability_rate:
+          type: string
+          description: Percentage of available cars
+          example: "60.0%"
+
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          description: Error message
+          example: Car with registration ABC123 not found

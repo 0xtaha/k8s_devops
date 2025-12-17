@@ -1,0 +1,61 @@
+# Kubernetes E2E Test Configuration
+# This file contains Kubernetes cluster connection configurations
+
+# Local Minikube cluster
+minikube:
+  kubeconfig: "~/.kube/config"
+  context: "minikube"
+  api_server: "" # Auto-detected from kubeconfig
+  verify_ssl: false # Minikube uses self-signed certificates
+  timeout: 300
+
+# Local development cluster (kind/docker-desktop)
+local:
+  kubeconfig: "~/.kube/config"
+  context: "docker-desktop" # or "kind-kind" for kind
+  api_server: "" # Auto-detected from kubeconfig
+  verify_ssl: false # Local clusters typically use self-signed certs
+  timeout: 300
+
+# Development cluster
+development:
+  kubeconfig: "~/.kube/config"
+  context: "dev-cluster"
+  api_server: "https://dev-k8s.example.com:6443"
+  verify_ssl: true
+  timeout: 300
+
+# Staging cluster
+staging:
+  kubeconfig: "~/.kube/config"
+  context: "staging-cluster"
+  api_server: "https://staging-k8s.example.com:6443"
+  verify_ssl: true
+  timeout: 600
+
+# Production cluster
+production:
+  kubeconfig: "~/.kube/config"
+  context: "prod-cluster"
+  api_server: "https://prod-k8s.example.com:6443"
+  verify_ssl: true
+  timeout: 900
+
+# CI/CD cluster (in-cluster config)
+ci:
+  kubeconfig: "" # Empty means use in-cluster config
+  context: ""
+  api_server: ""
+  verify_ssl: true
+  timeout: 450
+
+# Custom cluster example with certificate
+custom:
+  kubeconfig: "/path/to/custom/kubeconfig"
+  context: "custom-context"
+  api_server: "https://custom-k8s.example.com:6443"
+  verify_ssl: true
+  certificate_authority: "/path/to/ca.crt" # Optional
+  client_certificate: "/path/to/client.crt" # Optional
+  client_key: "/path/to/client.key" # Optional
+  timeout: 300

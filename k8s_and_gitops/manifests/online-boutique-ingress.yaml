@@ -1,0 +1,60 @@
+# Ingress resource for Online Boutique frontend
+# Exposes the application to external access via NGINX Ingress Controller
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: online-boutique-ingress
+  namespace: online-boutique
+  annotations:
+    # Rewrite target URL
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    # Enable CORS if needed
+    # nginx.ingress.kubernetes.io/enable-cors: "true"
+    # Set custom timeout
+    # nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    # nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+spec:
+  # Specify the ingress class
+  ingressClassName: nginx
+
+  # Rules for routing traffic
+  rules:
+  - host: shop.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 80
+
+---
+# Optional: Ingress with TLS/HTTPS
+# Uncomment and apply this if you have cert-manager installed
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: online-boutique-ingress-tls
+#   namespace: online-boutique
+#   annotations:
+#     nginx.ingress.kubernetes.io/rewrite-target: /
+#     cert-manager.io/cluster-issuer: selfsigned-issuer
+# spec:
+#   ingressClassName: nginx
+#   tls:
+#   - hosts:
+#     - shop.local
+#     secretName: shop-tls
+#   rules:
+#   - host: shop.local
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: frontend
+#             port:
+#               number: 80

@@ -1,0 +1,55 @@
+# Ingress resource for ArgoCD UI
+# Provides web access to ArgoCD dashboard
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server-ingress
+  namespace: argocd
+  annotations:
+    # SSL Passthrough is required for ArgoCD
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    # Backend protocol is HTTPS
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    # Force SSL redirect
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: argocd.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              name: https
+
+---
+# Alternative: Ingress with TLS termination at Ingress level
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: argocd-server-ingress-tls
+#   namespace: argocd
+#   annotations:
+#     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+#     cert-manager.io/cluster-issuer: selfsigned-issuer
+# spec:
+#   ingressClassName: nginx
+#   tls:
+#   - hosts:
+#     - argocd.local
+#     secretName: argocd-tls
+#   rules:
+#   - host: argocd.local
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: argocd-server
+#             port:
+#               name: https

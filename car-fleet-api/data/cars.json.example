@@ -1,0 +1,32 @@
+{
+  "cars": [
+    {
+      "brand": "Renault",
+      "model": "Clio",
+      "year": 2022,
+      "registration": "AB-123-CD",
+      "availability": true
+    },
+    {
+      "brand": "Peugeot",
+      "model": "208",
+      "year": 2023,
+      "registration": "EF-456-GH",
+      "availability": true
+    },
+    {
+      "brand": "Citroën",
+      "model": "C3",
+      "year": 2021,
+      "registration": "IJ-789-KL",
+      "availability": true
+    },
+    {
+      "brand": "Renault",
+      "model": "Megane",
+      "year": 2023,
+      "registration": "MN-012-OP",
+      "availability": true
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+# ArgoCD Application manifest for Online Boutique
+# This declarative approach is the GitOps way to manage ArgoCD applications
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: online-boutique
+  namespace: argocd
+  # Finalizer ensures proper cleanup
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  # Project to which this application belongs
+  project: default
+
+  # Source repository configuration
+  source:
+    # Git repository URL
+    repoURL: https://github.com/GoogleCloudPlatform/microservices-demo.git
+    # Branch or tag to track
+    targetRevision: HEAD
+    # Path within the repository
+    path: release
+
+  # Destination cluster and namespace
+  destination:
+    # Kubernetes cluster URL (in-cluster)
+    server: https://kubernetes.default.svc
+    # Target namespace for the application
+    namespace: online-boutique
+
+  # Sync policy configuration
+  syncPolicy:
+    # Automated sync settings
+    automated:
+      # Automatically delete resources that are no longer in Git
+      prune: true
+      # Automatically revert manual changes to match Git state
+      selfHeal: true
+      # Don't sync if there are no resources
+      allowEmpty: false
+
+    # Additional sync options
+    syncOptions:
+      # Automatically create namespace if it doesn't exist
+      - CreateNamespace=true
+      # Validate resources before applying
+      - Validate=true
+      # Prune resources as the last step
+      - PruneLast=false
+
+    # Retry configuration for failed syncs
+    retry:
+      # Maximum number of retry attempts
+      limit: 5
+      # Backoff strategy
+      backoff:
+        # Initial duration before retry
+        duration: 5s
+        # Multiplier for backoff duration
+        factor: 2
+        # Maximum backoff duration
+        maxDuration: 3m

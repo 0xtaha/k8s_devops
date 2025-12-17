@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: car-fleet
+  labels:
+    name: car-fleet
+    environment: production
+    project: orange-devops-task

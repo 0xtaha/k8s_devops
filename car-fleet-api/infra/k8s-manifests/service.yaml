@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: car-fleet-api-service
+  namespace: car-fleet
+  labels:
+    app: car-fleet-api
+    tier: backend
+spec:
+  type: LoadBalancer
+  selector:
+    app: car-fleet-api
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 5000
+    nodePort: 30080
+  sessionAffinity: None
