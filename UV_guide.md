@@ -1,35 +1,3 @@
-# Orange DevOps Task - Project Structure
-
-This repository contains the Orange DevOps Task projects, organized as separate modules using UV for package management.
-
-## Project Structure
-
-```
-orange-devops-task/
-├── car-fleet-api/          # Flask API for car fleet management
-│   ├── car_fleet/          # Python package with business logic
-│   ├── app.py              # Flask application
-│   ├── pyproject.toml      # UV project configuration
-│   ├── uv.lock             # Dependency lock file
-│   ├── Dockerfile          # Container image definition
-│   └── .venv/              # Virtual environment (ignored in git)
-│
-├── k8s-tests-project/      # Kubernetes E2E tests
-│   ├── test_k8s_e2e.py     # Test suite
-│   ├── nginx-healthcheck.yaml  # Test pod manifest
-│   ├── pyproject.toml      # UV project configuration
-│   ├── uv.lock             # Dependency lock file
-│   └── .venv/              # Virtual environment (ignored in git)
-│
-├── k8s-manifests/          # Kubernetes deployment manifests
-│   ├── namespace.yaml
-│   ├── deployment.yaml
-│   ├── service.yaml
-│   └── ingress.yaml
-│
-└── Documentation files     # API docs, architecture, guides, etc.
-```
-
 ## Package Manager: UV
 
 This project uses [UV](https://github.com/astral-sh/uv) - a fast Python package manager and project management tool.

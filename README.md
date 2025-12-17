@@ -532,6 +532,4 @@ This project is for educational purposes as part of the Orange DevOps assessment
 
 ## Author
 
-Developed for Orange DevOps Task
-
-For questions or support, contact mohammed.barkaoui.ext@orange.com
+Developed for Orange DevOps TasK
