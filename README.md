@@ -7,6 +7,25 @@ This repository contains solutions for the Orange DevOps Python programming exer
 
 A RESTful API backend built with Flask to manage a car rental fleet using Object-Oriented Programming (OOP).
 
+### Installation
+
+1. Create and activate a virtual environment:
+```bash
+cd car-fleet-api
+uv venv
+source ./venv/bin/activate
+```
+
+2. Install dependencies:
+```bash
+uv sync
+```
+
+3. run the application
+```bash
+uv run python app.py
+```
+
 ### Features
 
 - **RESTful API** with Flask
@@ -87,27 +106,20 @@ The test suite verifies:
 
 1. Create and activate a virtual environment:
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+cd k8s-tests-project
+uv venv
+source ./venv/bin/activate
 ```
 
 2. Install dependencies:
 ```bash
-pip install -r requirements.txt
+uv sync
 ```
 
-Or install individually:
+3. run the application
 ```bash
-pip install pytest kubernetes PyYAML
+uv run python app.py
 ```
-
-2. Configure kubectl access to your cluster:
-```bash
-# Verify cluster access
-kubectl cluster-info
-kubectl get nodes
-```
-
 ### Running the Tests
 
 1. Activate the virtual environment (if not already activated):
@@ -228,64 +240,6 @@ kubectl logs nginx-healthcheck -n test-auto
 # Delete pod
 kubectl delete pod nginx-healthcheck -n test-auto
 ```
-
-### Test Output Example
-
-```bash
-$ pytest test_k8s_e2e.py -v -s
-
-============================= test session starts ==============================
-collected 10 items
-
-test_k8s_e2e.py::TestClusterStatus::test_api_accessible
-Kubernetes API is accessible
-PASSED
-
-test_k8s_e2e.py::TestClusterStatus::test_nodes_ready
-Ready nodes: ['node-1']
-PASSED
-
-test_k8s_e2e.py::TestPodStatus::test_namespace_exists
-Namespace 'test-auto' exists
-PASSED
-
-test_k8s_e2e.py::TestPodStatus::test_pod_exists
-Pod 'nginx-healthcheck' exists in namespace 'test-auto'
-PASSED
-
-test_k8s_e2e.py::TestPodStatus::test_pod_running
-Pod 'nginx-healthcheck' is in Running state
-PASSED
-
-test_k8s_e2e.py::TestHealthChecks::test_pod_has_probes
-Liveness Probe configured: /
-Readiness Probe configured: /
-PASSED
-
-test_k8s_e2e.py::TestHealthChecks::test_readiness_probe_passes
-Readiness Probe is passing - Pod is Ready
-PASSED
-
-test_k8s_e2e.py::TestHealthChecks::test_liveness_probe_working
-Container restart count: 0
-Container ready: True
-PASSED
-
-test_k8s_e2e.py::TestLivenessProbeFailure::test_simulate_liveness_failure
-Initial restart count: 0
-Stopped nginx service to trigger Liveness Probe failure
-Waiting for Kubernetes to detect Liveness Probe failure...
-Pod restarted! New restart count: 1
-Pod is ready again after restart
-PASSED
-
-test_k8s_e2e.py::TestCleanup::test_delete_pod
-Pod 'nginx-healthcheck' deleted successfully
-Pod 'nginx-healthcheck' deletion confirmed
-PASSED
-
-============================== 10 passed in 125.43s ===============================
-```
 ### Troubleshooting
 
 #### Issue: kubectl not configured
@@ -318,17 +272,6 @@ TimeoutError: Pod 'nginx-healthcheck' did not become ready within 300 seconds
 TIMEOUT = 600  # Increase to 10 minutes
 ```
 
-### Configuration
-
-Edit these variables in `test_k8s_e2e.py` to customize:
-
-```python
-NAMESPACE = "test-auto"           # Test namespace
-POD_NAME = "nginx-healthcheck"    # Pod name
-POD_YAML_PATH = "nginx-healthcheck.yaml"  # Pod YAML path
-TIMEOUT = 300                     # Timeout in seconds
-```
-
 ---
 
 ## Dependencies
@@ -347,10 +290,9 @@ TIMEOUT = 300                     # Timeout in seconds
 Install all dependencies:
 ```bash
 # Activate virtual environment
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
+uv venv
+uv sync
+source ./venv/bin/activate
 ```
 
 ---

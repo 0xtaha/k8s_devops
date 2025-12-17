@@ -24,8 +24,8 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 cd car-fleet-api
 
 # Install dependencies
+uv venv
 uv sync
-
 # Run the application
 uv run python app.py
 
@@ -42,6 +42,7 @@ docker build -t car-fleet-api:latest .
 cd k8s-tests-project
 
 # Install dependencies
+uv venv
 uv sync --no-install-project
 
 # Run tests
